@@ -1,0 +1,12 @@
+{
+  "appName": "minime-app.aragonpm.eth",
+  "version": "1.0.0",
+  "roles": [
+    {
+      "name": "Doesn't matter",
+      "id": "NO_ROLE",
+      "params": []
+    }
+  ],
+  "path": "contracts/MiniMeToken.sol"
+}
