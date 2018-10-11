@@ -3,9 +3,8 @@ pragma solidity ^0.4.24;
 import "@aragon/os/contracts/apps/AragonApp.sol";
 import "@aragon/os/contracts/lib/math/SafeMath.sol";
 import "./TokenController.sol";
-import "./Controlled.sol";
 
-contract MiniMeToken is AragonApp, Controlled {
+contract MiniMeToken is AragonApp {
     using SafeMath for uint256;
 
     /// Events
@@ -22,7 +21,7 @@ contract MiniMeToken is AragonApp, Controlled {
     string public name;                //The Token's name: e.g. DigixDAO Tokens
     uint8 public decimals;             //Number of decimals of the smallest unit
     string public symbol;              //An identifier: e.g. REP
-
+    address public controller;         //The token controller
 
     /// @dev `Checkpoint` is the structure that attaches a block number to a
     ///  given value, the block number attached is the one that last changed the
@@ -108,6 +107,7 @@ contract MiniMeToken is AragonApp, Controlled {
         parentSnapShotBlock = _parentSnapShotBlock;
         transfersEnabled = _transfersEnabled;
         creationBlock = block.number;
+        controller = msg.sender;
         initialized();
     }
 
@@ -497,6 +497,16 @@ contract MiniMeToken is AragonApp, Controlled {
         token.transfer(controller, balance);
         ClaimedTokens(_token, controller, balance);
     }
+
+
+    modifier onlyController { require(msg.sender == controller); _; }
+
+    /// @notice Changes the controller of the contract
+    /// @param _newController The new controller of the contract
+    function changeController(address _newController) public onlyController {
+        controller = _newController;
+    }
+
 }
 
 
